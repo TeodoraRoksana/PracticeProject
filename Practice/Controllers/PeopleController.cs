@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Practice.Models;
 
 namespace Practice.Controllers
@@ -14,15 +15,23 @@ namespace Practice.Controllers
         {
             this.dbContext = dbContext;
         }
-        
-        [HttpGet]
+
+        [HttpGet(Name = "Index")]
+        public async Task<IActionResult> Index()
+        {
+            return dbContext.People != null ?
+                          View("Index", await dbContext.People.ToListAsync()) :
+                          Problem("Entity set 'PersonContext.Person'  is null.");
+        }
+
+        /*[HttpGet]
         public IEnumerable<People> Get()
         {
             using (var context = new PracticeContext())
             {
                 return context.People.ToList();
             }
-        }
+        }*/
 
         
 
