@@ -61,6 +61,7 @@ namespace Practice.Controllers
             {
                 oldperson.FirstName = person.FirstName;
                 oldperson.LastName = person.LastName;
+                oldperson.Email = person.Email;
                 oldperson.Sex = person.Sex;
                 oldperson.Age = person.Age;
                 oldperson.Birthday = person.Birthday;

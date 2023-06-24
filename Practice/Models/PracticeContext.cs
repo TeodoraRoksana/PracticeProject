@@ -49,6 +49,7 @@ public partial class PracticeContext : DbContext
         {
             entity.Property(e => e.PersonId).HasColumnName("PersonID");
             entity.Property(e => e.Birthday).HasColumnType("date");
+            entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FirstName).HasMaxLength(100);
             entity.Property(e => e.LastName).HasMaxLength(100);
         });

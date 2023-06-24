@@ -13,6 +13,8 @@ public partial class People
 
     public string LastName { get; set; } = null!;
 
+    public string Email { get; set; } = null!;
+
     public int Sex { get; set; }
 
     public int Age { get; set; }
