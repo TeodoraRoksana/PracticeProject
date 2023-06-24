@@ -1,19 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Practice.Models;
 
 public partial class People
 {
-    public int PeopleId { get; set; }
+    [Key]
+    public int PersonId { get; set; }
 
-    [DisplayName("Person Name")]
-    public string Name { get; set; } = null!;
+    public string FirstName { get; set; } = null!;
+
+    public string LastName { get; set; } = null!;
+
+    public int Sex { get; set; }
+
+    public int Age { get; set; }
 
     public DateTime Birthday { get; set; }
 
-    public int Gender { get; set; }
+    public string AboutMe { get; set; } = null!;
 
-    public string Description { get; set; } = null!;
+    public int Likes { get; set; }
+
+    public int Dislikes { get; set; }
+
+    public virtual ICollection<Pair> PairFirstPeople { get; set; } = new List<Pair>();
+
+    public virtual ICollection<Pair> PairSecondPeople { get; set; } = new List<Pair>();
 }

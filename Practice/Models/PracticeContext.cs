@@ -15,6 +15,8 @@ public partial class PracticeContext : DbContext
     {
     }
 
+    public virtual DbSet<Pair> Pairs { get; set; }
+
     public virtual DbSet<People> People { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -23,13 +25,32 @@ public partial class PracticeContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Pair>(entity =>
+        {
+            entity.HasKey(e => e.PairsId);
+
+            entity.Property(e => e.PairsId).HasColumnName("PairsID");
+            entity.Property(e => e.Data).HasColumnType("date");
+            entity.Property(e => e.FirstPersonId).HasColumnName("FirstPersonID");
+            entity.Property(e => e.SecondPersonId).HasColumnName("SecondPersonID");
+
+            entity.HasOne(d => d.FirstPerson).WithMany(p => p.PairFirstPeople)
+                .HasForeignKey(d => d.FirstPersonId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Pairs_People");
+
+            entity.HasOne(d => d.SecondPerson).WithMany(p => p.PairSecondPeople)
+                .HasForeignKey(d => d.SecondPersonId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Pairs_People1");
+        });
+
         modelBuilder.Entity<People>(entity =>
         {
-            entity.HasKey(e => e.PeopleId);
-
-            entity.Property(e => e.PeopleId).HasColumnName("PeopleID");
+            entity.Property(e => e.PersonId).HasColumnName("PersonID");
             entity.Property(e => e.Birthday).HasColumnType("date");
-            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.FirstName).HasMaxLength(100);
+            entity.Property(e => e.LastName).HasMaxLength(100);
         });
 
         OnModelCreatingPartial(modelBuilder);

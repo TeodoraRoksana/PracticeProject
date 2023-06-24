@@ -16,24 +16,27 @@ namespace Practice.Controllers
             this.dbContext = dbContext;
         }
 
-        [HttpGet(Name = "Index")]
+        /*[HttpGet(Name = "Index")]
         public async Task<IActionResult> Index()
         {
             return dbContext.People != null ?
                           View("Index", await dbContext.People.ToListAsync()) :
                           Problem("Entity set 'PersonContext.Person'  is null.");
-        }
-
-        /*[HttpGet]
-        public IEnumerable<People> Get()
-        {
-            using (var context = new PracticeContext())
-            {
-                return context.People.ToList();
-            }
         }*/
 
-        
+        [HttpGet]
+        public IEnumerable<People> Get()
+        {
+            //var res = dbContext.People.Include(x => x.PairFirstPeople).Include(y => y.PairFirstPeople).ToList(); //code in the future
+            
+            return dbContext.People.ToList();
+        }
+
+        [HttpGet("{id}")]
+        public IEnumerable<People> Get(int id)
+        {
+            return dbContext.People.Where(x => x.PersonId == id).ToList();
+        }
 
         [HttpPost]
         public IEnumerable<People> Post(People person)
@@ -47,19 +50,28 @@ namespace Practice.Controllers
             return dbContext.People.ToList();
         }
 
-        [HttpPut("{id}")]
+       [HttpPut("{id}")]
         public IEnumerable<People> Put(int id, People person)
         {
             if (person == null) { return dbContext.People.ToList(); }
 
-            var oldperson = dbContext.People.Where(p => p.PeopleId == id).FirstOrDefault();
-            
-            oldperson.Name = person.Name;
-            oldperson.Birthday = person.Birthday;
-            oldperson.Description = person.Description;
-            oldperson.Gender = person.Gender;
+            var oldperson = dbContext.People.Where(p => p.PersonId == id).FirstOrDefault();
 
-            dbContext.SaveChanges();
+            if (oldperson != null)
+            {
+                oldperson.FirstName = person.FirstName;
+                oldperson.LastName = person.LastName;
+                oldperson.Sex = person.Sex;
+                oldperson.Age = person.Age;
+                oldperson.Birthday = person.Birthday;
+                oldperson.AboutMe = person.AboutMe;
+                oldperson.Likes = person.Likes;
+                oldperson.Dislikes = person.Dislikes;
+                oldperson.PairFirstPeople = person.PairFirstPeople;
+                oldperson.PairSecondPeople = person.PairSecondPeople;
+
+                dbContext.SaveChanges();
+            }
 
             return dbContext.People.ToList();
         }
@@ -67,8 +79,8 @@ namespace Practice.Controllers
         [HttpDelete("{id}")]
         public IEnumerable<People> Delete(int id)
         {
-            var person = dbContext.People.Where(p => p.PeopleId == id).FirstOrDefault();
-            
+            var person = dbContext.People.Where(p => p.PersonId == id).FirstOrDefault();
+
             if (person != null)
             {
                 dbContext.People.Remove(person);
