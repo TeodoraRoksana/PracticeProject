@@ -52,6 +52,7 @@ public partial class PracticeContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FirstName).HasMaxLength(100);
             entity.Property(e => e.LastName).HasMaxLength(100);
+            entity.Property(e => e.Password).HasMaxLength(100);
         });
 
         OnModelCreatingPartial(modelBuilder);

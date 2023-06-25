@@ -1,52 +1,93 @@
-﻿@*@model IEnumerable<Practice.Models.People>
+﻿@model IEnumerable<Practice.Models.People>
 
 @{
     ViewData["Title"] = "Table";
 }
 
 <div class="table">
-    <button>Add new person</button>
+    @*<a class="nav-link text-dark" asp-page="./Add">Add new person</a>*@
     <table class="table">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Sex)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Age)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Birthday)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Gender)
+                    @Html.DisplayNameFor(model => model.AboutMe)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Description)
+                    @Html.DisplayNameFor(model => model.Likes)
                 </th>
-                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Dislikes)
+                </th>
+                <th>
+                    Count of meets
+                </th>
+                <th>
+                    <a asp-area="" asp-controller="Add" asp-action="Add">Add new person</a>
+                </th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
+                var sum = item.PairFirstPeople.Count() + item.PairSecondPeople.Count();
+                var d = item.Birthday.ToString("dd/MM/yyyy");
+                var sex = item.Sex == 1 ? "Male" : "Female";
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.FirstName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Birthday)
+                        @Html.DisplayFor(modelItem => item.LastName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Gender)
+                        @Html.DisplayFor(modelItem => item.Email)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Description)
+                        @sex
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.PeopleId">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@item.PeopleId">Delete</a>
+                        @Html.DisplayFor(modelItem => item.Age)
+                    </td>
+                    <td>
+                       
+                        @d
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AboutMe)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Likes)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Dislikes)
+                    </td>
+                    <td>
+                        @sum
+                    </td>
+                    <td>
+                        <a asp-controller="Edit" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a> |
+                        <a asp-controller="People" asp-action="Delete" asp-route-id="@item.PersonId">Delete</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-*@
