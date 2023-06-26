@@ -1,11 +1,10 @@
 ﻿@model IEnumerable<Practice.Models.People>
 
 @{
-    ViewData["Title"] = "Table";
+    ViewData["Title"] = "Table people";
 }
 
 <div class="table">
-    @*<a class="nav-link text-dark" asp-page="./Add">Add new person</a>*@
     <table class="table">
         <thead>
             <tr>
@@ -83,7 +82,7 @@
                         @sum
                     </td>
                     <td>
-                        <a asp-controller="Edit" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a> |
+                        @*<a asp-controller="Edit" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a> |*@
                         <a asp-controller="People" asp-action="Delete" asp-route-id="@item.PersonId">Delete</a>
                     </td>
                 </tr>

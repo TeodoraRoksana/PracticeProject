@@ -24,16 +24,16 @@ public partial class People
     public string Password { get; set; } = null!;
     [Required]
     public int Sex { get; set; }
-    [Required]
-    public int Age { get; set; }
+    [Required] 
+    public int Age { get; set; } = 0;
     [Required]
     public DateTime Birthday { get; set; }
     [Required]
-    public string AboutMe { get; set; } = null!;
+    public string AboutMe { get; set; } = "Nothing yet";
     [Required]
-    public int Likes { get; set; }
+    public int Likes { get; set; } = 0;
     [Required]
-    public int Dislikes { get; set; }
+    public int Dislikes { get; set; } = 0;
 
     public virtual ICollection<Pair>? PairFirstPeople { get; set; } = new List<Pair>();
 

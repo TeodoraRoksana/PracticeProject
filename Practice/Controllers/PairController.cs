@@ -17,48 +17,30 @@ namespace Practice.Controllers
             this.dbContext = dbContext;
         }
 
-        /*[HttpGet(Name = "Index")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return dbContext.People != null ?
-                          View("Index", await dbContext.People.ToListAsync()) :
-                          Problem("Entity set 'PersonContext.Person'  is null.");
-        }*/
-
-        [HttpGet]
-        public IEnumerable<Pair> Get()
-        {
-            //var res =dbContext.Pairs.Include(v => v.FirstPerson).ToList();
-
-            return dbContext.Pairs.ToList();
+            return View(dbContext.Pairs.Include(x => x.FirstPerson).Include(x => x.SecondPerson).ToList());
         }
 
-        [HttpGet("{id}")]
-        public IEnumerable<Pair> Get(int id)
+
+       
+
+        [Route("/Pair/{id}")]
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
-            
+            var pair = dbContext.Pairs.Where(p => p.PairsId == id).FirstOrDefault();
 
-            return dbContext.Pairs.Where(x => x.PairsId == id).ToList();
-        }
-
-        [HttpPost]
-        public IEnumerable<Pair> Post(PairDTO pair)
-        {
-            if (pair == null) { return dbContext.Pairs.ToList(); }
-
-            PairMapper mapper = new PairMapper();
-            
-            Pair newPair = mapper.Unmap(pair);
-            if (newPair != null)
+            if (pair != null)
             {
-                dbContext.Pairs.Add(newPair);
+                dbContext.Pairs.Remove(pair);
                 dbContext.SaveChanges();
             }
-            
-            return dbContext.Pairs.ToList();
+
+            return View("Index", dbContext.Pairs.Include(x => x.FirstPerson).Include(x => x.SecondPerson).ToList());
         }
 
-       [HttpPut("{id}")]
+        /*[HttpPut("{id}")]
         public IEnumerable<Pair> Put(int id, PairDTO pair)
         {
             if (pair == null) { return dbContext.Pairs.ToList(); }
@@ -82,20 +64,42 @@ namespace Practice.Controllers
             }
 
             return dbContext.Pairs.ToList();
-        }
+        }*/
 
-        [HttpDelete("{id}")]
-        public IEnumerable<Pair> Delete(int id)
+        /*[HttpPost]
+        public IActionResult Post()
         {
-            var pair = dbContext.Pairs.Where(p => p.PairsId == id).FirstOrDefault();
+            var listPeople = dbContext.People.ToList();
 
-            if (pair != null)
+            Random rnd = new Random();
+            while (listPeople.Count > 1)
             {
-                dbContext.Pairs.Remove(pair);
-                dbContext.SaveChanges();
+                int firstPerson = rnd.Next(0, listPeople.Count);
+                var FirstP = listPeople[firstPerson];
+                listPeople.RemoveAt(firstPerson);
+
+                int secondPerson = rnd.Next(0, listPeople.Count);
+                var SecondP = listPeople[secondPerson];
+                listPeople.RemoveAt(secondPerson);
+
+                var newPair = new Pair
+                {
+                    PairsId = 0,
+                    FirstPersonId = FirstP.PersonId,
+                    SecondPersonId = SecondP.PersonId,
+                    Data = DateTime.Now,
+                    FirstPersonComment = "Nothing yet",
+                    SecondPersonComment = "Nothing yet",
+                    FirstPerson = null,
+                    SecondPerson = null
+                };
+
+                dbContext.Pairs.Add(newPair);
             }
 
-            return dbContext.Pairs.ToList();
-        }
+            dbContext.SaveChanges();
+
+            return Redirect("/Pair"); ;
+        }*/
     }
 }

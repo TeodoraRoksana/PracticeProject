@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Practice.Models.Pair>
+
+@{
+    ViewData["Title"] = "Table pairs";
+}
+
+<div class="table">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name 1
+                </th>
+                <th></th>
+                <th>
+                    Name 2
+                </th>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Data)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstPersonComment)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SecondPersonComment)
+                </th>
+                <th>
+                    <a asp-area="" asp-controller="Generite" asp-action="Generite">Generite pairs</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                if (item.FirstPerson == null || item.SecondPerson == null)
+                {
+                    continue;
+                }
+                var date = item.Data.ToString("dd/MM/yyyy");
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstPerson.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstPerson.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SecondPerson.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SecondPerson.LastName)
+                    </td>
+                    <td>
+                        @date
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstPersonComment)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SecondPersonComment)
+                    </td>
+                    <td>
+                        <a asp-controller="Pair" asp-action="Delete" asp-route-id="@item.PairsId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
