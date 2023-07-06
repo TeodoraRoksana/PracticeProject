@@ -4,7 +4,7 @@
 }
 
 <div class="form">
-    <form>
+    <form asp-controller="Edit" asp-action="Put" asp-route-id="@Model.PersonId">
         <div>
             <label for="FirstName">First name:</label><br />
             <input type="text" id="FirstName" name="FirstName" asp-for="FirstName"><br />
@@ -27,11 +27,10 @@
         </div>
         <div>
             <label for="Sex">Select your sex:</label><br />
-            <input type="radio" id="male" name="sex_male" value="1" asp-for="Sex">
-            <label for="male">Male</label><br />
-            <input type="radio" id="female" name="sex_female" value="0" asp-for="Sex">
-            <label for="female">Female</label><br>
-            <span asp-validation-for="Sex" class="text-danger"></span>
+            <select asp-for="Sex" id="Sex" name="Sex">
+                <option value="0">Female</option>
+                <option value="1">Male</option>
+            </select>
         </div>
         <div>
             <label for="Birthday">Birthday:</label><br />
@@ -52,6 +51,6 @@
 
 
 
-        <input type="submit" value="Submit" asp-controller="Edit" asp-action="Put" />
+        <input type="submit" value="Submit" @*asp-controller="Edit" asp-action="Put"*@ />
     </form>
 </div>

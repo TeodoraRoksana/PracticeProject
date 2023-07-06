@@ -26,7 +26,10 @@
                     @Html.DisplayNameFor(model => model.SecondPersonComment)
                 </th>
                 <th>
-                    <a asp-area="" asp-controller="Generite" asp-action="Generite">Generite pairs</a>
+                    @*<a asp-area="" asp-controller="Generite" asp-action="Post">Generite pairs</a>*@
+                    <form asp-controller="Generite" asp-action="Post" method="post">
+                        <input type="submit" value="Generite" />
+                    </form>
                 </th>
             </tr>
         </thead>

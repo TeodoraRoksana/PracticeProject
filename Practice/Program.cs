@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
+using Practice.Services.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddDbContext<PracticeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MainDB")));
 

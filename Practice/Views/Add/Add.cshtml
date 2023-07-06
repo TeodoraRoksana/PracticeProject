@@ -27,18 +27,10 @@
         </div>
         <div>
             <label for="Sex">Select your sex:</label><br />
-            @*<input type="radio" id="male" name="sex_male" value="1" asp-for="Sex">
-            <label for="male">Male</label><br />
-            <input type="radio" id="female" name="sex_female" value="0" asp-for="Sex">
-            <label for="female">Female</label><br>
-            <span asp-validation-for="Sex" class="text-danger"></span>*@
-            @*<select name="selectSex" asp-items="@ViewBag.SelectItems"></select>*@
             <select asp-for="Sex" id="Sex" name="Sex">
                 <option value="0">Female</option>
                 <option value="1">Male</option>
             </select>
-            @*<input asp-for="Sex" type="radio" name="gender" value="1" />
-            <input asp-for ="Sex" type="radio" name="gender" value="0" />*@
         </div>
         <div>
             <label for="Birthday">Birthday:</label><br />
@@ -50,15 +42,8 @@
             <input type="text" id="AboutMe" name="AboutMe" asp-for="AboutMe"><br />
             <span asp-validation-for="AboutMe" class="text-danger"></span>
         </div>
-        @*<input type="hidden" id="Age" name="Age" asp-for="Age" value="0"><br />
-        <input type="hidden" id="Likes" name="Likes" asp-for="Likes" value="0"><br />
-        <input type="hidden" id="Dislikes" name="Dislikes" asp-for="Dislikes" value="0"><br />
-        <span asp-validation-for="Dislikes" class="text-danger"></span>*@
         <input type="hidden" name="PairFirstPeople" asp-for="PairFirstPeople" value="null"><br />
         <input type="hidden" name="PairSecondPeople" asp-for="PairSecondPeople" value="null"><br />
-       @* <input type="hidden" name="Sex" asp-for="Sex" value="0"><br />*@
-
-
 
         <input type="submit" value="Submit" />
     </form>

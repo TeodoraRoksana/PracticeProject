@@ -26,19 +26,20 @@ namespace Practice.Controllers
         }
 
 
-       /* [HttpPost]
-        public IActionResult Post(People person)
-        {
-            if (!ModelState.IsValid) { return View("Add", person); }
+        /* [HttpPost]
+         public IActionResult Post(People person)
+         {
+             if (!ModelState.IsValid) { return View("Add", person); }
 
-            var newPerson = person;
-            dbContext.People.Add(newPerson);
-            dbContext.SaveChanges();
+             var newPerson = person;
+             dbContext.People.Add(newPerson);
+             dbContext.SaveChanges();
 
-            return Redirect("/People");
-        }*/
+             return Redirect("/People");
+         }*/
 
-        [HttpPut]
+        [Route("/Edit/Put/{id}")]
+        [HttpPut("{id}")]
         public IActionResult Put(int id, People person)
         {
             if (!ModelState.IsValid) { return View("Edit", person); }
@@ -65,5 +66,7 @@ namespace Practice.Controllers
 
             return Redirect("/People");
         }
+
+
     }
 }
