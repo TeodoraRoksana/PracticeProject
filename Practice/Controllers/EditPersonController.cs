@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
+using Practice.Services;
 
 namespace Practice.Controllers
 {
-    public class EditController : Controller
+    public class EditPersonController : Controller
     {
-        private readonly PracticeContext dbContext;
+        private readonly IDBService dbService;
 
-        public EditController(PracticeContext dbContext)
+        public EditPersonController(IDBService dbService)
         {
-            this.dbContext = dbContext;
+            this.dbService = dbService;
         }
 
         /*public IActionResult Edit()
@@ -21,7 +22,7 @@ namespace Practice.Controllers
         [HttpGet("{id}")]
         public IActionResult Edit(int id)
         {
-            var person = dbContext.People.Where(x => x.PersonId == id).FirstOrDefault();
+            var person = dbService.searchPersonByID(id);
             return View(person);
         }
 
@@ -31,7 +32,7 @@ namespace Practice.Controllers
         {
             if (!ModelState.IsValid) { return View("Edit", person); }
 
-            var oldperson = dbContext.People.Where(p => p.PersonId == id).FirstOrDefault();
+            var oldperson = dbService.searchPersonByID(id);
 
             if (oldperson != null)
             {
@@ -48,7 +49,7 @@ namespace Practice.Controllers
                 oldperson.PairFirstPeople = person.PairFirstPeople;
                 oldperson.PairSecondPeople = person.PairSecondPeople;
 
-                dbContext.SaveChanges();
+                dbService.saveChengesInDB();
             }
 
             return Redirect("/People");

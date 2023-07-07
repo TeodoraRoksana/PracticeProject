@@ -39,7 +39,7 @@
                     Count of meets
                 </th>
                 <th>
-                    <a asp-area="" asp-controller="Add" asp-action="Add">Add new person</a>
+                    <a asp-area="" asp-controller="AddPerson" asp-action="Add">Add new person</a>
                 </th>
             </tr>
         </thead>
@@ -82,7 +82,7 @@
                         @sum
                     </td>
                     <td>
-                        <a asp-controller="Edit" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a> |
+                        <a asp-controller="EditPerson" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a> |
                         <a asp-controller="People" asp-action="Delete" asp-route-id="@item.PersonId">Delete</a>
                     </td>
                 </tr>

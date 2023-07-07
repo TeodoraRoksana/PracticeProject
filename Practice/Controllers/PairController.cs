@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
 using Practice.Models.Mapper;
+using Practice.Services;
 
 namespace Practice.Controllers
 {
@@ -10,96 +11,31 @@ namespace Practice.Controllers
     [Route("[controller]")]
     public class PairController : Controller
     {
-        private readonly PracticeContext dbContext;
+        private readonly IDBService dbService;
 
-        public PairController(PracticeContext dbContext)
+        public PairController(IDBService dbService)
         {
-            this.dbContext = dbContext;
+            this.dbService = dbService;
         }
 
         public IActionResult Index()
         {
-            return View(dbContext.Pairs.Include(x => x.FirstPerson).Include(x => x.SecondPerson).ToList());
+            return View(dbService.getPairWithIncludesToList());
         }
-
-
-       
 
         [Route("/Pair/{id}")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var pair = dbContext.Pairs.Where(p => p.PairsId == id).FirstOrDefault();
+            var pair = dbService.searchPairByID(id);
 
             if (pair != null)
             {
-                dbContext.Pairs.Remove(pair);
-                dbContext.SaveChanges();
+                dbService.removePairFromDB(pair);
+                dbService.saveChengesInDB();
             }
 
-            return View("Index", dbContext.Pairs.Include(x => x.FirstPerson).Include(x => x.SecondPerson).ToList());
+            return View("Index", dbService.getPairWithIncludesToList());
         }
-
-        /*[HttpPut("{id}")]
-        public IEnumerable<Pair> Put(int id, PairDTO pair)
-        {
-            if (pair == null) { return dbContext.Pairs.ToList(); }
-
-            var oldpair = dbContext.Pairs.Where(p => p.PairsId == id).FirstOrDefault();
-
-            PairMapper mapper = new PairMapper();
-            var newPair = mapper.Unmap(pair);
-
-            if (oldpair != null && newPair != null)
-            {
-                oldpair.FirstPersonId = newPair.FirstPersonId;
-                oldpair.SecondPersonId = newPair.SecondPersonId;
-                oldpair.Data = newPair.Data;
-                oldpair.FirstPersonComment = newPair.FirstPersonComment;
-                oldpair.SecondPersonComment = newPair.SecondPersonComment;
-                oldpair.FirstPerson = newPair.FirstPerson;
-                oldpair.SecondPerson = newPair.SecondPerson;
-
-                dbContext.SaveChanges();
-            }
-
-            return dbContext.Pairs.ToList();
-        }*/
-
-        /*[HttpPost]
-        public IActionResult Post()
-        {
-            var listPeople = dbContext.People.ToList();
-
-            Random rnd = new Random();
-            while (listPeople.Count > 1)
-            {
-                int firstPerson = rnd.Next(0, listPeople.Count);
-                var FirstP = listPeople[firstPerson];
-                listPeople.RemoveAt(firstPerson);
-
-                int secondPerson = rnd.Next(0, listPeople.Count);
-                var SecondP = listPeople[secondPerson];
-                listPeople.RemoveAt(secondPerson);
-
-                var newPair = new Pair
-                {
-                    PairsId = 0,
-                    FirstPersonId = FirstP.PersonId,
-                    SecondPersonId = SecondP.PersonId,
-                    Data = DateTime.Now,
-                    FirstPersonComment = "Nothing yet",
-                    SecondPersonComment = "Nothing yet",
-                    FirstPerson = null,
-                    SecondPerson = null
-                };
-
-                dbContext.Pairs.Add(newPair);
-            }
-
-            dbContext.SaveChanges();
-
-            return Redirect("/Pair"); ;
-        }*/
     }
 }

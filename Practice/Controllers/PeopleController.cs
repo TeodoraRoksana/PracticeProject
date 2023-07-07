@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
+using Practice.Services;
 
 namespace Practice.Controllers
 {
@@ -9,37 +10,37 @@ namespace Practice.Controllers
     [Route("[controller]")]
     public class PeopleController : Controller
     {
-        private readonly PracticeContext dbContext;
+        private readonly IDBService dbService;
 
-        public PeopleController(PracticeContext dbContext)
+        public PeopleController(IDBService dbService)
         {
-            this.dbContext = dbContext;
+            this.dbService = dbService;
         }
 
        
         public IActionResult Index()
         {
-            return View(dbContext.People.Include(x => x.PairFirstPeople).Include(x => x.PairSecondPeople).ToList());
+            return View(dbService.getPeopleWithIncludesToList());
         }    
 
         [HttpPost]
         public IEnumerable<People> Post(People person)
         {
-            if (person == null) { return dbContext.People.ToList(); }
+            if (person == null) { return dbService.getPeopleToList(); }
 
             var newPerson = person;
-            dbContext.People.Add(newPerson);
-            dbContext.SaveChanges();
+            dbService.addPersonToDB(newPerson);
+            dbService.saveChengesInDB();
 
-            return dbContext.People.ToList();
+            return dbService.getPeopleToList();
         }
 
        [HttpPut("{id}")]
         public IEnumerable<People> Put(int id, People person)
         {
-            if (person == null) { return dbContext.People.ToList(); }
+            if (person == null) { return dbService.getPeopleToList(); }
 
-            var oldperson = dbContext.People.Where(p => p.PersonId == id).FirstOrDefault();
+            var oldperson = dbService.searchPersonByID(id);
 
             if (oldperson != null)
             {
@@ -56,25 +57,25 @@ namespace Practice.Controllers
                 oldperson.PairFirstPeople = person.PairFirstPeople;
                 oldperson.PairSecondPeople = person.PairSecondPeople;
 
-                dbContext.SaveChanges();
+                dbService.saveChengesInDB();
             }
 
-            return dbContext.People.ToList();
+            return dbService.getPeopleToList();
         }
 
         [Route("/People/{id}")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var person = dbContext.People.Where(p => p.PersonId == id).FirstOrDefault();
+            var person = dbService.searchPersonByID(id);
 
             if (person != null)
             {
-                dbContext.People.Remove(person);
-                dbContext.SaveChanges();
+                dbService.removePersonFromDB(person);
+                dbService.saveChengesInDB();
             }
 
-            return View("Index", dbContext.People.Include(x => x.PairFirstPeople).Include(x => x.PairSecondPeople).ToList());
+            return View("Index", dbService.getPeopleWithIncludesToList());
         }
     }
 }

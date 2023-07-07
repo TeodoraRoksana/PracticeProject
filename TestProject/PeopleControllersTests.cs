@@ -3,17 +3,20 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Practice.Controllers;
 using Practice.Models;
+using Practice.Services;
 using System;
 
 namespace TestProject
 {
     public class PeopleControllersTests
     {
-        private AddController addController;
-        private EditController editController;
+        private AddPersonController addController;
+        private EditPersonController editController;
         private PeopleController peopleController;
-        private Mock<PracticeContext> mockContext;
+        private Mock<PracticeContext> mockDBContext;
+        private Mock<IDBService> mockContextService;
         private People testPerson;
+        private People testPerson2;
 
         [SetUp]
         public void Setup()
@@ -34,23 +37,47 @@ namespace TestProject
                 PairFirstPeople = null,
                 PairSecondPeople = null
             };
+            testPerson2 = new People()
+            {
+                PersonId = 2,
+                FirstName = "Test2",
+                LastName = "Test2",
+                Email = "Test2@gmail.com",
+                Password = "password2",
+                Sex = 0,
+                Age = 2,
+                Birthday = DateTime.Now,
+                AboutMe = "Test2",
+                Likes = 1,
+                Dislikes = 1,
+                PairFirstPeople = null,
+                PairSecondPeople = null
+            };
 
             var mockSet = new Mock<DbSet<People>>(); ;
-            mockContext = new Mock<PracticeContext>(new DbContextOptions<PracticeContext>());
-            mockContext.Setup(m => m.People).Returns(mockSet.Object);
-            //mockContext.Setup(c => c.SaveChanges(default)).Returns(() => Task.Run(() => 1)).Verifiable();
-            
-            addController = new AddController(mockContext.Object);
-            editController = new EditController(mockContext.Object);
-            peopleController = new PeopleController(mockContext.Object);
+            mockDBContext = new Mock<PracticeContext>(new DbContextOptions<PracticeContext>());
+            mockDBContext.Setup(m => m.People).Returns(mockSet.Object);
+            mockContextService = new Mock<IDBService>();
+            mockContextService.Setup(m => m.saveChengesInDB()).Verifiable();
+            mockContextService.Setup(m => m.addPersonToDB(testPerson)).Verifiable();
+            mockContextService.Setup(m => m.removePersonFromDB(testPerson)).Verifiable();
+            mockContextService.Setup(m => m.removePersonFromDB(testPerson2)).Verifiable();
+            mockContextService.Setup(m => m.searchPersonByID(1)).Returns(testPerson).Verifiable();
+            mockContextService.Setup(m => m.searchPersonByID(default)).Returns(testPerson2).Verifiable();
+            mockContextService.Setup(m => m.getPeopleToList()).Returns(new List<People>()).Verifiable();
+            mockContextService.Setup(m => m.getPeopleWithIncludesToList()).Returns(new List<People>()).Verifiable();
+
+            addController = new AddPersonController(mockContextService.Object);
+            editController = new EditPersonController(mockContextService.Object);
+            peopleController = new PeopleController(mockContextService.Object);
         }
 
         [Test]
         public void AddNewPersonTest()
         {
             addController.Post(testPerson);
-            mockContext.Verify(x => x.People.Add(testPerson), Times.Once());
-            mockContext.Verify(x => x.SaveChanges(), Times.Once());
+            mockContextService.Verify(m => m.addPersonToDB(testPerson), Times.Once());
+            mockContextService.Verify(m => m.saveChengesInDB(), Times.Once());
         }
 
         [Test]
@@ -58,8 +85,8 @@ namespace TestProject
         {
             addController.ModelState.AddModelError("email", "email is absent");
             addController.Post(testPerson);
-            mockContext.Verify(x => x.People.Add(testPerson), Times.Never());
-            mockContext.Verify(x => x.SaveChanges(), Times.Never());
+            mockContextService.Verify(m => m.addPersonToDB(testPerson), Times.Never());
+            mockContextService.Verify(m => m.saveChengesInDB(), Times.Never());
         }
 
         [Test]
@@ -67,6 +94,39 @@ namespace TestProject
         {
             var result = (ViewResult)addController.Add();
             Assert.AreEqual("Add", result.ViewName);
+        }
+
+        [Test]
+        public void DeletePersonTest()
+        {
+            peopleController.Delete(1);
+
+            mockContextService.Verify(m => m.searchPersonByID(1), Times.Once());
+            mockContextService.Verify(m => m.searchPersonByID(default), Times.Never());
+            mockContextService.Verify(m => m.removePersonFromDB(testPerson), Times.Once());
+            mockContextService.Verify(m => m.removePersonFromDB(testPerson2), Times.Never());
+            mockContextService.Verify(m => m.saveChengesInDB(), Times.Once());
+        }
+
+        [Test]
+        public void EditPersonTest()
+        {
+            editController.Put(1, testPerson);
+
+            mockContextService.Verify(m => m.searchPersonByID(1), Times.Once());
+            mockContextService.Verify(m => m.searchPersonByID(default), Times.Never());
+            mockContextService.Verify(m => m.saveChengesInDB(), Times.Once());
+        }
+
+        [Test]
+        public void EditPersonInvalidModelTest()
+        {
+            editController.ModelState.AddModelError("email", "email is absent");
+            editController.Put(1, testPerson);
+
+            mockContextService.Verify(m => m.searchPersonByID(1), Times.Never());
+            mockContextService.Verify(m => m.searchPersonByID(default), Times.Never());
+            mockContextService.Verify(m => m.saveChengesInDB(), Times.Never());
         }
     }
 }

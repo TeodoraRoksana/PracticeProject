@@ -2,16 +2,17 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
+using Practice.Services;
 
 namespace Practice.Controllers
 {
-    public class AddController : Controller
+    public class AddPersonController : Controller
     {
-        private readonly PracticeContext dbContext;
+        private IDBService dbService;
 
-        public AddController(PracticeContext dbContext)
+        public AddPersonController(IDBService dbService)
         {
-            this.dbContext = dbContext;
+            this.dbService = dbService;
         }
 
         public IActionResult Add()
@@ -37,8 +38,8 @@ namespace Practice.Controllers
 
             person.Age = age;
             var newPerson = person;
-            dbContext.People.Add(newPerson);
-            dbContext.SaveChanges();
+            dbService.addPersonToDB(newPerson);
+            dbService.saveChengesInDB();
 
             return Redirect("/People");
         }

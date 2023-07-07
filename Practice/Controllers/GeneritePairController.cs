@@ -4,18 +4,19 @@ using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using Practice.Models;
 using Practice.Models.DTO;
+using Practice.Services;
 using Practice.Services.EmailService;
 
 namespace Practice.Controllers
 {
-    public class GeneriteController : Controller
+    public class GeneritePairController : Controller
     {
-        private readonly PracticeContext dbContext;
+        private readonly IDBService dbService;
         private readonly IEmailService emailService;
 
-        public GeneriteController(PracticeContext dbContext, IEmailService emailService)
+        public GeneritePairController(IDBService dbService, IEmailService emailService)
         {
-            this.dbContext = dbContext;
+            this.dbService = dbService;
             this.emailService = emailService;
         }
 
@@ -28,7 +29,7 @@ namespace Practice.Controllers
         [HttpPost]
         public IActionResult Post()
         {
-            var listPeople = dbContext.People.ToList();
+            var listPeople = dbService.getPeopleToList();
 
             Random rnd = new Random();
             while (listPeople.Count > 1) 
@@ -53,7 +54,7 @@ namespace Practice.Controllers
                     SecondPerson = null
                 };
 
-                dbContext.Pairs.Add(newPair);
+                dbService.addPairToDB(newPair);
 
                 EmailDTO request = new EmailDTO() {
                     To = FirstP.Email,
@@ -71,7 +72,7 @@ namespace Practice.Controllers
                 emailService.SendEmail(request2);
             }
 
-            dbContext.SaveChanges();
+            dbService.saveChengesInDB();
 
             return Redirect("/Pair");
         }
