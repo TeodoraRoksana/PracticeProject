@@ -25,19 +25,6 @@ namespace Practice.Controllers
             return View(person);
         }
 
-
-        /* [HttpPost]
-         public IActionResult Post(People person)
-         {
-             if (!ModelState.IsValid) { return View("Add", person); }
-
-             var newPerson = person;
-             dbContext.People.Add(newPerson);
-             dbContext.SaveChanges();
-
-             return Redirect("/People");
-         }*/
-
         [Route("/Edit/Put/{id}")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, People person)

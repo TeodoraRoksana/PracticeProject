@@ -20,7 +20,7 @@ namespace Practice.Controllers
             SelectList selectLists = new SelectList(sex, sex[0]);
             ViewBag.SelectList = selectLists;
 
-            return View();
+            return View("Add");
         }
 
         
