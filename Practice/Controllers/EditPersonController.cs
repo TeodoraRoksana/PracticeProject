@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
 using Practice.Services.DBService;
@@ -20,6 +21,7 @@ namespace Practice.Controllers
         }*/
         [Route("/Edit/Edit/{id}")]
         [HttpGet("{id}")]
+        
         public IActionResult Edit(int id)
         {
             var person = dbService.searchPersonByID(id);
@@ -28,6 +30,7 @@ namespace Practice.Controllers
 
         [Route("/Edit/Put/{id}")]
         [HttpPut("{id}")]
+        
         public IActionResult Put(int id, People person)
         {
             if (!ModelState.IsValid) { return View("Edit", person); }

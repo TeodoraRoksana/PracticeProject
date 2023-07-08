@@ -1,4 +1,19 @@
-﻿@model IEnumerable<Practice.Models.Pair>
+﻿@using System.IdentityModel.Tokens.Jwt;
+@model IEnumerable<Practice.Models.Pair>
+@using Microsoft.AspNetCore.Http
+@using System.Security.Claims;
+@inject IHttpContextAccessor Accessor
+
+@{
+    var jwtHandler = new JwtSecurityTokenHandler();
+    string role = "nothing";
+    if (Accessor.HttpContext.Session.GetString("Token") != null)
+    {
+        var tokenContent = jwtHandler.ReadToken(Accessor.HttpContext.Session.GetString("Token")) as JwtSecurityToken;
+        role = tokenContent.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
+    }
+    //var email = tokenContent.Claims.First(claim => claim.Type == "email").Value;
+}
 
 @{
     ViewData["Title"] = "Table pairs";
@@ -26,10 +41,12 @@
                     @Html.DisplayNameFor(model => model.SecondPersonComment)
                 </th>
                 <th>
-                    @*<a asp-area="" asp-controller="Generite" asp-action="Post">Generite pairs</a>*@
-                    <form asp-controller="GeneritePair" asp-action="Post" method="post">
-                        <input type="submit" value="Generite" />
-                    </form>
+                    @if (role == "admin")
+                    {
+                        <form asp-controller="GeneritePair" asp-action="Post" method="post">
+                            <input type="submit" value="Generite" />
+                        </form>
+                    }
                 </th>
             </tr>
         </thead>

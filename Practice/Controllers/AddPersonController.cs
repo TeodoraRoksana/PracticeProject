@@ -31,6 +31,9 @@ namespace Practice.Controllers
         [HttpPost]
         public IActionResult Post(People person)
         {
+            if(dbService.getPeopleToList().Any(p => p.Email == person.Email))
+                ModelState.AddModelError("email", "Email is already use!");
+            
             if (!ModelState.IsValid) { return View("Add", person); }
 
             DateTime dateTime = DateTime.Now;
@@ -47,7 +50,7 @@ namespace Practice.Controllers
             dbService.addPersonToDB(newPerson);
             dbService.saveChengesInDB();
 
-            return Redirect("/People");
+            return Redirect("/LogInPerson/LogIn");
         }
 
         

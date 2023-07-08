@@ -1,4 +1,5 @@
 ﻿using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
@@ -6,9 +7,11 @@ using Practice.Models;
 using Practice.Models.DTO;
 using Practice.Services.DBService;
 using Practice.Services.EmailService;
+using System.Data;
 
 namespace Practice.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class GeneritePairController : Controller
     {
         private readonly IDBService dbService;

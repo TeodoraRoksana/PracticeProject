@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
@@ -9,6 +10,7 @@ namespace Practice.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "admin")]
     public class PairController : Controller
     {
         private readonly IDBService dbService;
@@ -18,11 +20,13 @@ namespace Practice.Controllers
             this.dbService = dbService;
         }
 
+        
         public IActionResult Index()
         {
             return View(dbService.getPairWithIncludesToList());
         }
 
+        
         [Route("/Pair/{id}")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

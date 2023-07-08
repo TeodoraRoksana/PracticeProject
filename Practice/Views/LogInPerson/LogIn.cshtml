@@ -1,0 +1,23 @@
+﻿@using Practice.Models.DTO;
+@model PeopleLogInDTO
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="form">
+    <h2>Log in</h2><br />
+    <form asp-controller="LogInPerson" asp-action="LogInPerson" method="get">
+        <div>
+            <label for="Email">Email:</label><br />
+            <input type="email" id="Email" name="Email" placeholder="name@example.com" asp-for="Email"><br />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div>
+            <label for="Password">Password:</label><br />
+            <input type="password" id="Password" name="Password" asp-for="Password"><br />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <br />
+        <input type="submit" value="Submit" />
+    </form>
+</div>

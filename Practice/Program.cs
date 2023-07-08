@@ -1,20 +1,32 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Practice.Middleware;
 using Practice.Models;
+using Practice.Services;
 using Practice.Services.DBService;
 using Practice.Services.EmailService;
 using Practice.Services.HashService;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<PracticeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MainDB")));
+
 // Add services to the container.
+builder.Services.AddJWTAuthentication();
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IDBService, DBService>();
 builder.Services.AddScoped<IHashService, HashService>();
-
-builder.Services.AddDbContext<PracticeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MainDB")));
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);//We set Time here 
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+}); 
 
 var app = builder.Build();
 
@@ -36,8 +48,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
+app.UseMiddleware<MyAuthorizationMiddleware>();
 
+app.UseAuthentication();
 app.UseAuthorization();
+//app.UseMiddleware<MyAuthorizationMiddleware>();
 
 app.MapControllerRoute(
     name: "default",

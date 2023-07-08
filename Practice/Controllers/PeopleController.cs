@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
@@ -8,6 +9,7 @@ namespace Practice.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class PeopleController : Controller
     {
         private readonly IDBService dbService;
@@ -23,7 +25,7 @@ namespace Practice.Controllers
             return View(dbService.getPeopleWithIncludesToList());
         }    
 
-        [HttpPost]
+        /*[HttpPost]
         public IEnumerable<People> Post(People person)
         {
             if (person == null) { return dbService.getPeopleToList(); }
@@ -61,16 +63,27 @@ namespace Practice.Controllers
             }
 
             return dbService.getPeopleToList();
-        }
+        }*/
 
         [Route("/People/{id}")]
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(int id)
         {
             var person = dbService.searchPersonByID(id);
 
             if (person != null)
             {
+                var listPairs = dbService.getPairWithIncludesToList().Where(p => p.FirstPersonId == id || p.SecondPersonId == id).ToList();
+
+                if(listPairs.Count > 0)
+                {
+                    foreach (var pair in listPairs)
+                    {
+                        dbService.removePairFromDB(pair);
+                    }
+                }
+
                 dbService.removePersonFromDB(person);
                 dbService.saveChengesInDB();
             }

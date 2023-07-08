@@ -1,4 +1,18 @@
-﻿<!DOCTYPE html>
+﻿@using System.IdentityModel.Tokens.Jwt;
+@using System.Security.Claims;
+@inject IHttpContextAccessor Accessor
+@{
+    var jwtHandler = new JwtSecurityTokenHandler();
+    string role = "nothing";
+    if (Accessor.HttpContext.Session.GetString("Token") != null)
+    {
+        var tokenContent = jwtHandler.ReadToken(Accessor.HttpContext.Session.GetString("Token")) as JwtSecurityToken;
+        role = tokenContent.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
+    }
+    //var email = tokenContent.Claims.First(claim => claim.Type == "email").Value;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -24,10 +38,22 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="People" asp-action="Index">Table people</a>
+                            @if (role == "user" || role == "admin")
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="People" asp-action="Index">Table people</a>
+                            }
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pair" asp-action="Index">Table pairs</a>
+                            @if (role == "admin")
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pair" asp-action="Index">Table pairs</a>
+                            }
+                        </li>
+                        <li class="nav-item log-out">
+                            @if (role == "user" || role == "admin")
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="LogInPerson" asp-action="LogOutPerson">Log out</a>
+                            }
                         </li>
                     </ul>
                 </div>
