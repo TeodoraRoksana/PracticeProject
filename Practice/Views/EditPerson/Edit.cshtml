@@ -21,11 +21,6 @@
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
         <div>
-            <label for="Password">Password:</label><br />
-            <input type="password" id="Password" name="Password" asp-for="Password"><br />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-        <div>
             <label for="Sex">Select your sex:</label><br />
             <select asp-for="Sex" id="Sex" name="Sex">
                 <option value="0">Female</option>
@@ -42,12 +37,14 @@
             <input type="text" id="AboutMe" name="AboutMe" asp-for="AboutMe"><br />
             <span asp-validation-for="AboutMe" class="text-danger"></span>
         </div>
-        <input type="hidden" id="Age" name="Age" asp-for="Age" value="0"><br />
-        <input type="hidden" id="Likes" name="Likes" asp-for="Likes" value="0"><br />
-        <input type="hidden" id="Dislikes" name="Dislikes" asp-for="Dislikes" value="0"><br />
+        <br />
+        <input type="hidden" id="Age" name="Age" asp-for="Age" value="0">
+        <input type="hidden" id="Likes" name="Likes" asp-for="Likes" value="0">
+        <input type="hidden" id="Dislikes" name="Dislikes" asp-for="Dislikes" value="0">
         <span asp-validation-for="Dislikes" class="text-danger"></span>
-        <input type="hidden" name="PairFirstPeople" asp-for="PairFirstPeople" value="null"><br />
-        <input type="hidden" name="PairSecondPeople" asp-for="PairSecondPeople" value="null"><br />
+        <input type="hidden" name="PairFirstPeople" asp-for="PairFirstPeople" value="null">
+        <input type="hidden" name="PairSecondPeople" asp-for="PairSecondPeople" value="null">
+        <input type="hidden" id="Password" name="Password" asp-for="Password" value="11111111">
 
 
 

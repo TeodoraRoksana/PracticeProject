@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Practice.Controllers;
 using Practice.Models;
-using Practice.Services;
+using Practice.Services.DBService;
+using Practice.Services.HashService;
 using System;
 
 namespace TestProject
@@ -15,6 +16,7 @@ namespace TestProject
         private PeopleController peopleController;
         private Mock<PracticeContext> mockDBContext;
         private Mock<IDBService> mockContextService;
+        private Mock<IHashService> mockHashService;
         private People testPerson;
         private People testPerson2;
 
@@ -67,7 +69,10 @@ namespace TestProject
             mockContextService.Setup(m => m.getPeopleToList()).Returns(new List<People>()).Verifiable();
             mockContextService.Setup(m => m.getPeopleWithIncludesToList()).Returns(new List<People>()).Verifiable();
 
-            addController = new AddPersonController(mockContextService.Object);
+            mockHashService = new Mock<IHashService>();
+            mockHashService.Setup(m => m.HashPassword(testPerson.Password)).Verifiable();
+
+            addController = new AddPersonController(mockContextService.Object, mockHashService.Object);
             editController = new EditPersonController(mockContextService.Object);
             peopleController = new PeopleController(mockContextService.Object);
         }
@@ -76,6 +81,7 @@ namespace TestProject
         public void AddNewPersonTest()
         {
             addController.Post(testPerson);
+            mockHashService.Verify(m => m.HashPassword("password"), Times.Once());
             mockContextService.Verify(m => m.addPersonToDB(testPerson), Times.Once());
             mockContextService.Verify(m => m.saveChengesInDB(), Times.Once());
         }
@@ -85,6 +91,7 @@ namespace TestProject
         {
             addController.ModelState.AddModelError("email", "email is absent");
             addController.Post(testPerson);
+            mockHashService.Verify(m => m.HashPassword(testPerson.Password), Times.Never());
             mockContextService.Verify(m => m.addPersonToDB(testPerson), Times.Never());
             mockContextService.Verify(m => m.saveChengesInDB(), Times.Never());
         }

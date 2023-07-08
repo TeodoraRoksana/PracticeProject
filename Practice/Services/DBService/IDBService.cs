@@ -1,6 +1,6 @@
 ﻿using Practice.Models;
 
-namespace Practice.Services
+namespace Practice.Services.DBService
 {
     public interface IDBService
     {

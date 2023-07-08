@@ -2,7 +2,7 @@
 using Practice.Models;
 using System;
 
-namespace Practice.Services
+namespace Practice.Services.DBService
 {
     public class DBService : IDBService
     {

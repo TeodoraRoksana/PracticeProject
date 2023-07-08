@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
 using Practice.Models.Mapper;
-using Practice.Services;
+using Practice.Services.DBService;
 
 namespace Practice.Controllers
 {

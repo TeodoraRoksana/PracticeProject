@@ -2,17 +2,20 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
-using Practice.Services;
+using Practice.Services.DBService;
+using Practice.Services.HashService;
 
 namespace Practice.Controllers
 {
     public class AddPersonController : Controller
     {
         private IDBService dbService;
+        private IHashService hashService;
 
-        public AddPersonController(IDBService dbService)
+        public AddPersonController(IDBService dbService, IHashService hashService)
         {
             this.dbService = dbService;
+            this.hashService = hashService;
         }
 
         public IActionResult Add()
@@ -37,11 +40,16 @@ namespace Practice.Controllers
                       (dateTime.Day >= person.Birthday.Day))) ? 1 : 0);
 
             person.Age = age;
+
+            person.Password = hashService.HashPassword(person.Password);
+
             var newPerson = person;
             dbService.addPersonToDB(newPerson);
             dbService.saveChengesInDB();
 
             return Redirect("/People");
         }
+
+        
     }
 }

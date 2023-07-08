@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Practice.Models;
-using Practice.Services;
+using Practice.Services.DBService;
 
 namespace Practice.Controllers
 {
@@ -39,7 +39,6 @@ namespace Practice.Controllers
                 oldperson.FirstName = person.FirstName;
                 oldperson.LastName = person.LastName;
                 oldperson.Email = person.Email;
-                oldperson.Password = person.Password;
                 oldperson.Sex = person.Sex;
                 oldperson.Age = person.Age;
                 oldperson.Birthday = person.Birthday;
