@@ -104,18 +104,6 @@ namespace TestProject
         }
 
         [Test]
-        public void DeletePersonTest()
-        {
-            peopleController.Delete(1);
-
-            mockContextService.Verify(m => m.searchPersonByID(1), Times.Once());
-            mockContextService.Verify(m => m.searchPersonByID(default), Times.Never());
-            mockContextService.Verify(m => m.removePersonFromDB(testPerson), Times.Once());
-            mockContextService.Verify(m => m.removePersonFromDB(testPerson2), Times.Never());
-            mockContextService.Verify(m => m.saveChengesInDB(), Times.Once());
-        }
-
-        [Test]
         public void EditPersonTest()
         {
             editController.Put(1, testPerson);

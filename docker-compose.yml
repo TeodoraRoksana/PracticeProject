@@ -1,0 +1,32 @@
+version: '3.4'
+
+networks:
+    practice-net:
+        driver: bridge
+        attachable: true
+services:
+  practicedb:
+    container_name: "app-db"
+    image: "mcr.microsoft.com/mssql/server:latest"
+    ports:
+        - "1433:1433"
+    volumes:
+      - ./:/../../DataBase
+    environment:
+      SA_PASSWORD: "Mydatabase!1"
+      ACCEPT_EULA: "Y"
+    networks:
+        - "practice-net"
+  practiceapp:
+    container_name: "practiceapp"
+    image: "${DOCKER_REGISTRY-}practiceapp"
+    build: 
+        context: .
+        dockerfile: "Practice/Dockerfile"
+    ports:
+        - "32791:80"
+        - "32790:443"
+    networks:
+        - "practice-net"
+    depends_on:
+      - "practicedb"

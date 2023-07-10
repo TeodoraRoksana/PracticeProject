@@ -10,7 +10,10 @@ using Practice.Services.HashService;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<PracticeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MainDB")));
+
+builder.Services.AddDbContext<PracticeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DockerDB")));
+
+//builder.Services.AddDbContext<PracticeContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("MainDB")));
 
 // Add services to the container.
 builder.Services.AddJWTAuthentication();
